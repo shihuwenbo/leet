@@ -14,10 +14,10 @@ class Solution:
         table = [[0]*(len1+1) for i in xrange(len2+1)]
 
         # init table
-        for i in xrange(1, len1+1):
-            table[0][i] = 1
-        for i in xrange(1, len2+1):
-            table[i][0] = 1
+        for i in xrange(0, len1+1):
+            table[0][i] = i
+        for i in xrange(0, len2+1):
+            table[i][0] = i
 
         # fill table
         for i in xrange(1, len2+1):
@@ -25,8 +25,8 @@ class Solution:
                 val = self.fill_cell(table, i, j, word1, word2)
                 table[i][j] = val
         
-            self.print_table(table)
-            print
+            #self.print_table(table)
+            #print
 
         # return minimum edit distance
         return table[len2][len1]
@@ -53,4 +53,4 @@ class Solution:
             print line
 
 sol = Solution()
-print sol.minDistance('plasma', 'altruism')
+print sol.minDistance('halo', 'hello')
