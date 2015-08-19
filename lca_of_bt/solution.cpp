@@ -13,26 +13,27 @@ struct TreeNode {
 
 class Solution {
 public:
-    TreeNode* get_path(TreeNode* root, TreeNode* p, TreeNode* q, bool& p_found, bool& q_found) {
-        if(root == NULL) {
-            return NULL;
-        }
-        if(root == p) {
-            p_found = true;
-        }
-        if(root == q) {
-            q_found = true;
-        }
-        bool p_found_left = false, q_found_left = false;
-        get_path(root->left, p, q, p_found_left, q_found_left);
+    void helper(TreeNode* root, TreeNode* p, TreeNode* q, bool &have_p, bool &have_q, TreeNode **ans) {
+        if(root == NULL)
+            return;
+       
+        bool have_p_left = false, have_q_left = false;
+        helper(root->left, p, q, have_p_left, have_q_left, ans);
+        
+        bool have_p_right = false, have_q_right = false;
+        helper(root->right, p, q, have_p_right, have_q_right, ans);
+        
+        have_p = have_p_left || have_p_right || root == p;
+        have_q = have_q_left || have_q_right || root == q;
 
-        return NULL;
+        if(have_p && have_q && *ans == NULL)
+            *ans = root;
     }
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        bool p_found = false, q_found = false;
-        get_path(root, p, q, p_found, q_found);
-        TreeNode *lca = root;
-        return lca;
+        bool have_p = false, have_q = false;
+        TreeNode* ans = NULL;
+        helper(root, p, q, have_p, have_q, &ans);
+        return ans;
     }
 };
 
@@ -48,7 +49,7 @@ int main() {
     TreeNode* five = (TreeNode*) malloc(sizeof(TreeNode));
    
     zero->val = 0;
-    one->val = 9;
+    one->val = 1;
     two->val = 2;
     three->val = 3;
     four->val = 4;
@@ -68,6 +69,6 @@ int main() {
     four->left = NULL; four->right = NULL;
 
     Solution sol;
-    TreeNode* lca = sol.lowestCommonAncestor(three, six, four);
+    TreeNode* lca = sol.lowestCommonAncestor(three, four, six);
     cout << lca->val << endl;
 }
